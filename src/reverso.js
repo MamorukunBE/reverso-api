@@ -489,7 +489,7 @@ module.exports = class Reverso {
 
         const verbForms = []
 
-        $('div[class="blue-box-wrap"]').each((i, e) => {
+        $('div[class~="blue-box-wrap"]').each((i, e) => {
             const header = $(e).attr('mobile-title').trim()
             const data = []
 
@@ -511,10 +511,19 @@ module.exports = class Reverso {
                     }
                 })
 
+            const preData = [];
+            data.forEach(e => preData.push(""));
+            ["particletxt", "graytxt", "auxgraytxt"].forEach(name => {
+                $(e)
+                    .find(`i[class="${name}"]`)
+                    .each((j, word) => preData[j] += $(word).text())
+            });
+
             verbForms.push({
                 id: i,
                 conjugation: header,
-                verbs: [...new Set(data)],
+                preVerbs: preData,
+                verbs: data,
             })
         })
 
