@@ -261,6 +261,7 @@ module.exports = class Reverso {
                 languages[source] +
                 '/' +
                 encodeURIComponent(text),
+            language: source,
         })
         if (!response.success) return this.#handleError(response.error, cb)
 
@@ -545,10 +546,42 @@ module.exports = class Reverso {
      * @returns {Promise<any>}
      */
     async #request(config) {
+        const languageMap = {
+            'english': 'en-US,en;q=0.9',
+            'french': 'fr-FR,fr;q=0.9,en;q=0.8',
+            'german': 'de-DE,de;q=0.9,en;q=0.8',
+            'spanish': 'es-ES,es;q=0.9,en;q=0.8',
+            'italian': 'it-IT,it;q=0.9,en;q=0.8',
+            'russian': 'ru-RU,ru;q=0.9,en;q=0.8',
+            'polish': 'pl-PL,pl;q=0.9,en;q=0.8',
+            'arabic': 'ar-SA,ar;q=0.9,en;q=0.8',
+            'hebrew': 'he-IL,he;q=0.9,en;q=0.8',
+            'japanese': 'ja-JP,ja;q=0.9,en;q=0.8',
+            'dutch': 'nl-NL,nl;q=0.9,en;q=0.8',
+            'portugese': 'pt-PT,pt;q=0.9,en;q=0.8',
+            'portuguese': 'pt-PT,pt;q=0.9,en;q=0.8',
+            'romanian': 'ro-RO,ro;q=0.9,en;q=0.8',
+            'chinese': 'zh-CN,zh;q=0.9,en;q=0.8',
+            'turkish': 'tr-TR,tr;q=0.9,en;q=0.8',
+            'ukrainian': 'uk-UA,uk;q=0.9,en;q=0.8',
+        };
+
+        const acceptLanguage = config.language && languageMap[config.language]
+            ? languageMap[config.language]
+            : 'en-US,en;q=0.9';
+
         const headers = {
-            Accept: '*/*',
-            Connection: 'keep-alive',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': acceptLanguage,
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
             'User-Agent': getRandom(),
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Sec-Fetch-User': '?1',
+            'Upgrade-Insecure-Requests': '1',
+            'Cache-Control': 'max-age=0',
             ...config.headers,
         }
 
